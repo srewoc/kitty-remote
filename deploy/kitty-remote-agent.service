@@ -1,0 +1,18 @@
+[Unit]
+Description=Kitty Remote local agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+Environment="PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin"
+WorkingDirectory=/REPLACE/ABSOLUTE/PROJECT/PATH
+ExecStart="/REPLACE/ABSOLUTE/PROJECT/PATH/.venv/bin/kitty-remote" agent
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target

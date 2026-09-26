@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "kitty-remote"
+version = "0.1.0"
+description = "A private mobile console for existing Kitty windows"
+requires-python = ">=3.12"
+license = "MIT"
+dependencies = ["fastapi>=0.115,<1", "uvicorn[standard]>=0.34,<1", "httpx>=0.28,<1", "websockets>=14,<17", "argon2-cffi>=23,<26"]
+
+[project.scripts]
+kitty-remote = "kitty_remote.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8,<10", "pytest-asyncio>=0.25,<2", "ruff>=0.11,<1", "playwright>=1.50,<2"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC"]

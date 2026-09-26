@@ -1,0 +1,15 @@
+# Merge this site into the existing host-network Caddy configuration.
+# In the existing global block, set: default_sni {$DOMAIN}
+https://{$DOMAIN} {
+    tls {
+        issuer acme {
+            dir https://acme-v02.api.letsencrypt.org/directory
+            profile shortlived
+            disable_tlsalpn_challenge
+        }
+    }
+    request_body {
+        max_size 8KB
+    }
+    reverse_proxy 127.0.0.1:18765
+}

@@ -1,0 +1,6 @@
+{$DOMAIN} {
+    request_body {
+        max_size 8KB
+    }
+    reverse_proxy relay:8765
+}

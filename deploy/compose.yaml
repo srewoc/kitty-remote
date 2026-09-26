@@ -1,0 +1,41 @@
+services:
+  relay:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    restart: unless-stopped
+    environment:
+      KR_ORIGIN: https://${DOMAIN:?Set DOMAIN in deploy/.env}
+      KR_DATABASE: /data/relay.sqlite3
+      KR_DEV: "0"
+    volumes:
+      - relay-data:/data
+    expose:
+      - "8765"
+    healthcheck:
+      test: ["CMD", "/app/.venv/bin/python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8765/api/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    security_opt:
+      - no-new-privileges:true
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN:?Set DOMAIN in deploy/.env}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      relay:
+        condition: service_healthy
+volumes:
+  relay-data:
+  caddy-data:
+  caddy-config:
